@@ -15,7 +15,7 @@ import {
 import { useTransport } from '../context/TransportContext';
 
 export default function Navbar() {
-  const { userRole, setUserRole, notifications, currentStop } = useTransport();
+  const { userRole, setUserRole, notifications, currentStop, userName, userEmail } = useTransport();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -312,7 +312,9 @@ export default function Navbar() {
             style={{ padding: '0.45rem 0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
           >
             <User size={15} />
-            <span className="hide-on-mobile">Login / Switch</span>
+<span className="hide-on-mobile">
+  {userName || userEmail || 'Login / Switch'}
+</span>
           </Link>
 
           {/* Mobile Menu Hamburger */}

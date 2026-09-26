@@ -18,6 +18,7 @@ export function TransportProvider({ children }) {
   const [authoritySummary, setAuthoritySummary] = useState({});
   const [userCheckedIn, setUserCheckedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -225,26 +226,28 @@ return unsubscribe;
   };
 
   const value = {
-    userRole,
-    setUserRole,
-    selectedStopId,
-    setSelectedStopId: selectStop,
-    currentStop,
-    stops,
-    setStops,
-    buses,
-    setBuses,
-    userCheckedIn,
-    checkInAtStop,
-    upcomingBusesForCurrentStop,
-    authoritySummary,
-    routes,
-    getBusById,
-    userEmail,
-    setUserEmail,
-    notifications,
-    setNotifications,
-    isLoading,
+  userRole,
+  setUserRole,
+  selectedStopId,
+  setSelectedStopId: selectStop,
+  currentStop,
+  stops,
+  setStops,
+  buses,
+  setBuses,
+  userCheckedIn,
+  checkInAtStop,
+  upcomingBusesForCurrentStop,
+  authoritySummary,
+  routes,
+  getBusById,
+  userEmail,
+  setUserEmail,
+  userName,
+  setUserName,
+  notifications,
+  setNotifications,
+  isLoading,
     // Direct service access for advanced queries
    services: {
   busService,

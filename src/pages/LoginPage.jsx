@@ -2,26 +2,81 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Bus, Lock, Mail, ArrowLeft, ArrowRight, ShieldCheck, User } from 'lucide-react';
 import { useTransport } from '../context/TransportContext';
+import { supabase } from '../lib/supabase';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setUserRole, setUserEmail } = useTransport();
+  const { setUserRole, setUserEmail, setUserName } = useTransport();
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('passenger'); // 'passenger' | 'authority'
+const [password, setPassword] = useState('');
+const [name, setName] = useState('');
+const [isSignUp, setIsSignUp] = useState(false);
+const [activeTab, setActiveTab] = useState('passenger');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setUserRole(activeTab);
-    if (email) setUserEmail(email);
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (activeTab === 'passenger') {
-      navigate('/passenger/dashboard');
+  if (!email || !password) {
+    alert('Please enter your email and password.');
+    return;
+  }
+
+  if (isSignUp && !name) {
+    alert('Please enter your name.');
+    return;
+  }
+
+  try {
+    if (isSignUp) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            role: activeTab
+          }
+        }
+      });
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      if (data.user) {
+        alert('Account created successfully! You can now log in.');
+        setIsSignUp(false);
+        setPassword('');
+      }
     } else {
-      navigate('/authority/dashboard');
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      if (data.user) {
+  setUserRole(activeTab);
+  setUserEmail(data.user.email);
+  setUserName(data.user.user_metadata?.full_name || '');
+
+  if (activeTab === 'passenger') {
+          navigate('/passenger/dashboard');
+        } else {
+          navigate('/authority/dashboard');
+        }
+      }
     }
-  };
+  } catch (error) {
+    alert('Something went wrong. Please try again.');
+  }
+};
 
   const handleQuickPassenger = () => {
     setUserRole('passenger');
@@ -139,6 +194,40 @@ export default function LoginPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {isSignUp && (
+  <div>
+    <label style={{
+      display: 'block',
+      fontSize: '0.8rem',
+      fontWeight: '600',
+      color: 'var(--text-secondary)',
+      marginBottom: '0.35rem'
+    }}>
+      Full Name
+    </label>
+
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        position: 'absolute',
+        left: '12px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: 'var(--text-muted)'
+      }}>
+        <User size={16} />
+      </div>
+
+      <input
+        type="text"
+        className="input"
+        style={{ paddingLeft: '2.5rem' }}
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+    </div>
+  </div>
+)}
           <div>
             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
               Email Address
@@ -178,12 +267,34 @@ export default function LoginPage() {
           </div>
 
           <button
-            type="submit"
-            className="btn btn-primary"
-            style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem' }}
-          >
-            Login to MOVEIT
-          </button>
+  type="submit"
+  className="btn btn-primary"
+  style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem' }}
+>
+  {isSignUp ? 'Create MOVEIT Account' : 'Login to MOVEIT'}
+</button>
+
+<button
+  type="button"
+  onClick={() => {
+    setIsSignUp(!isSignUp);
+    setPassword('');
+  }}
+  style={{
+    width: '100%',
+    marginTop: '0.75rem',
+    border: 'none',
+    background: 'transparent',
+    color: 'var(--primary)',
+    fontSize: '0.8rem',
+    fontWeight: '600',
+    cursor: 'pointer'
+  }}
+>
+  {isSignUp
+    ? 'Already have an account? Login'
+    : "Don't have an account? Create one"}
+</button>
         </form>
 
         {/* Direct Portal Access */}
