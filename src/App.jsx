@@ -9,7 +9,7 @@ import BusStopSelectionPage from './pages/BusStopSelectionPage';
 import BusDetailsPage from './pages/BusDetailsPage';
 import AuthorityDashboard from './pages/AuthorityDashboard';
 import BusMonitoringPage from './pages/BusMonitoringPage';
-import PassengerDemandPage from './pages/PassengerDemandPage';
+import PassengerDemandPage from './pages/PassengerDemandPage';\nimport LiveMapPage from './pages/LiveMapPage';\nimport FindBusPage from './pages/FindBusPage';\nimport InsideBusPage from './pages/InsideBusPage';\nimport NextStopPage from './pages/NextStopPage';\nimport TripCompletedPage from './pages/TripCompletedPage';\nimport MyTripsPage from './pages/MyTripsPage';
 
 // Authority Layout Wrapper with Sidebar
 function AuthorityLayout({ children }) {
@@ -50,6 +50,14 @@ export default function App() {
 
           {/* Page 5: Bus Details Page */}
           <Route path="/passenger/bus/:busId" element={<div className="main-content"><BusDetailsPage /></div>} />
+
+          {/* Premium passenger journey screens */}
+          <Route path="/passenger/live-map" element={<LiveMapPage />} />
+          <Route path="/passenger/find-bus" element={<FindBusPage />} />
+          <Route path="/passenger/inside-bus/:busId" element={<InsideBusPage />} />
+          <Route path="/passenger/next-stop/:busId" element={<NextStopPage />} />
+          <Route path="/passenger/check-out" element={<TripCompletedPage />} />
+          <Route path="/passenger/my-trips" element={<MyTripsPage />} />
 
           {/* Page 6: Transport Authority Dashboard */}
           <Route path="/authority/dashboard" element={
