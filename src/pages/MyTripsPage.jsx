@@ -1,0 +1,8 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Bus,CheckCircle2,Clock3 } from 'lucide-react';
+import { useTransport } from '../context/TransportContext';
+export default function MyTripsPage(){
+ const {tripHistory,activeTrip}=useTransport();const trips=tripHistory.length?tripHistory:(activeTrip?[activeTrip]:[]);
+ return <div className="premium-page"><div className="premium-container"><div className="hero-kicker">PASSENGER HISTORY</div><h1 style={{fontSize:'clamp(2rem,4vw,3.5rem)'}}>My Trips</h1><p>Your recent journeys and completed travel history.</p><div className="trip-list" style={{marginTop:26}}>{trips.length?trips.map((t,i)=><div className="trip-item" key={i}><div style={{width:42,height:42,borderRadius:12,display:'grid',placeItems:'center',background:'rgba(56,200,255,.1)',color:'var(--primary)'}}><Bus size={20}/></div><div><strong>{t.busNumber}</strong><div className="premium-muted" style={{fontSize:13}}>{t.origin} → {t.destination}</div><div style={{fontSize:11,marginTop:5}}><Clock3 size={11}/> {t.duration||'24 min'}</div></div><span style={{color:'var(--success)',fontSize:12,fontWeight:800}}><CheckCircle2 size={15} style={{verticalAlign:'-3px'}}/> Completed</span></div>):<div className="premium-panel" style={{padding:28,textAlign:'center'}}><h3>No completed trips yet</h3><p style={{margin:'6px 0 18px'}}>Your completed journeys will appear here.</p><Link to="/passenger/find-bus" className="btn btn-primary">Find a Bus</Link></div>}</div></div></div>;
+}
