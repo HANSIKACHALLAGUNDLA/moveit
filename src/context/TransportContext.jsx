@@ -20,7 +20,7 @@ export function TransportProvider({ children }) {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [notifications, setNotifications] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);\n  const [activeTrip, setActiveTrip] = useState(null);\n  const [tripHistory, setTripHistory] = useState([]);
 
   // Initialize data through the service layer
   useEffect(() => {
