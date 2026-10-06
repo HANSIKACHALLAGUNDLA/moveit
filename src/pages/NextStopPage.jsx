@@ -1,0 +1,10 @@
+import React from 'react';
+import { Link,useParams } from 'react-router-dom';
+import { Bus,Clock3,ArrowLeft } from 'lucide-react';
+import { useTransport } from '../context/TransportContext';
+export default function NextStopPage(){
+ const {busId}=useParams();const {getBusById}=useTransport();const bus=getBusById(busId);
+ if(!bus)return <div className="premium-page"><div className="premium-container"><h2>Bus not found</h2></div></div>;
+ const stops=bus.stopsSequence||[];
+ return <div className="premium-page"><div className="premium-container"><Link to={'/passenger/inside-bus/'+bus.id} className="btn btn-secondary" style={{marginBottom:20}}><ArrowLeft size={15}/> Inside Bus</Link><div className="premium-panel" style={{padding:32}}><div className="hero-kicker">ON YOUR ROUTE</div><div style={{display:'flex',justifyContent:'space-between',alignItems:'end',gap:20,flexWrap:'wrap'}}><div><h1 style={{fontSize:'clamp(2.5rem,6vw,5rem)'}}>{bus.nextStop}</h1><p>Next stop for {bus.busNumber}</p></div><div style={{textAlign:'right'}}><div className="premium-muted">ETA</div><strong style={{fontSize:36,color:'var(--primary)'}}>{bus.etaMinutes} min</strong></div></div><div style={{marginTop:35}}>{stops.map((s,i)=><div key={s.name} style={{display:'grid',gridTemplateColumns:'30px 1fr auto',gap:12,alignItems:'center',minHeight:58}}><div style={{display:'flex',flexDirection:'column',alignItems:'center'}}><span className={'stop-dot '+(s.status==='next'?'active':'')}/>{i<stops.length-1&&<span className="stop-line" style={{height:35}}/>}</div><div style={{fontWeight:s.status==='next'?850:500}}>{s.name}</div><div style={{fontSize:12,color:s.status==='next'?'var(--primary)':'var(--text-muted)'}}>{s.status==='next'?'NEXT':s.time}</div></div>)}</div><div style={{marginTop:22,padding:15,borderRadius:14,background:'rgba(56,200,255,.06)',border:'1px solid rgba(56,200,255,.16)',display:'flex',gap:10,alignItems:'center'}}><Bus size={18} color="var(--primary)"/><strong>{bus.busNumber} is on route</strong><span className="premium-muted">{bus.currentLocation}</span><Clock3 size={15} style={{marginLeft:'auto'}}/>{bus.etaMinutes} min</div></div></div></div>;
+}
